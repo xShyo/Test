@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Control Café</title>
+<title>Control Café OXXO</title>
 
 <style>
 
@@ -29,8 +29,6 @@ max-width:900px;
 margin:auto;
 }
 
-/* CATEGORIA */
-
 .categoria{
 background:white;
 border-radius:12px;
@@ -44,8 +42,6 @@ border-left:6px solid #6b8cff;
 margin:0 0 12px 0;
 font-size:18px;
 }
-
-/* HEADER */
 
 .header{
 display:grid;
@@ -61,8 +57,6 @@ text-align:center;
 text-align:left;
 }
 
-/* FILAS */
-
 .producto{
 display:grid;
 grid-template-columns:2fr 110px 110px 120px;
@@ -76,20 +70,15 @@ border-bottom:1px solid #f0f0f0;
 border-bottom:none;
 }
 
-/* NOMBRE */
-
 .nombre{
 font-weight:bold;
 cursor:pointer;
-position:relative;
 }
 
 .oz{
 font-size:11px;
 color:#777;
 }
-
-/* INPUT */
 
 input{
 width:100%;
@@ -107,53 +96,16 @@ text-align:center;
 color:#1a237e;
 }
 
-/* TARJETA PRODUCTO */
-
-.product-card{
-
-position:fixed;
-left:50%;
-top:50%;
-transform:translate(-50%,-50%);
-width:260px;
-background:white;
-border-radius:12px;
-box-shadow:0 10px 40px rgba(0,0,0,0.25);
-padding:15px;
-display:none;
-z-index:1000;
-
+.detalle{
+font-size:11px;
+color:#666;
+text-align:center;
 }
 
-.product-card img{
-width:100%;
-border-radius:8px;
-margin-bottom:10px;
+.warning{
+background:#ffebee;
+border-color:#e53935;
 }
-
-.product-card h3{
-margin:5px 0;
-}
-
-.product-card p{
-font-size:13px;
-color:#555;
-}
-
-.overlay{
-
-position:fixed;
-left:0;
-top:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.3);
-display:none;
-z-index:999;
-
-}
-
-/* BOTON */
 
 .controls{
 text-align:center;
@@ -170,7 +122,38 @@ background:#e53935;
 color:white;
 }
 
-/* MOBILE */
+/* TARJETA PRODUCTO */
+
+.product-card{
+position:fixed;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%);
+width:260px;
+background:white;
+border-radius:12px;
+box-shadow:0 10px 40px rgba(0,0,0,0.25);
+padding:15px;
+display:none;
+z-index:1000;
+}
+
+.product-card img{
+width:100%;
+border-radius:8px;
+margin-bottom:10px;
+}
+
+.overlay{
+position:fixed;
+left:0;
+top:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.3);
+display:none;
+z-index:999;
+}
 
 @media (max-width:600px){
 
@@ -208,25 +191,44 @@ grid-template-columns:1fr;
 
 <script>
 
-const productos = [
+const productos=[
 
 {
 categoria:"Sabores de Café",
 items:[
-{nombre:"Regular", oz:700, img:"imagenes/regular.jpg", info:"Sabor clásico de café Andatti."},
-{nombre:"Canela", oz:700, img:"imagenes/canela.jpg", info:"Café con sabor a canela."},
-{nombre:"Crema Irlandesa", oz:700, img:"imagenes/irlandesa.jpg", info:"Café sabor crema irlandesa."},
-{nombre:"Moka", oz:700, img:"imagenes/moka.jpg", info:"Café con sabor chocolate moka."},
-{nombre:"Chocolate", oz:700, img:"imagenes/chocolate.jpg", info:"Bebida sabor chocolate."}
+
+{nombre:"Regular",oz:700,img:"imagenes/regular.png",info:"Sabor clásico de café."},
+{nombre:"Canela",oz:700,img:"imagenes/canela.jpg",info:"Café sabor canela."},
+{nombre:"Crema Irlandesa",oz:700,img:"imagenes/irlandesa.jpg",info:"Café sabor crema irlandesa."},
+{nombre:"Moka",oz:700,img:"imagenes/moka.jpg",info:"Café sabor chocolate moka."},
+{nombre:"Chocolate",oz:700,img:"imagenes/chocolate.jpg",info:"Bebida sabor chocolate."},
+{nombre:"Chocolate Abuelita",oz:647,img:"imagenes/abuelita.jpg",info:"Chocolate Abuelita."},
+{nombre:"Avellana",oz:700,img:"imagenes/avellana.jpg",info:"Café sabor avellana."},
+{nombre:"Sin Azúcar",oz:700,img:"imagenes/sinazucar.jpg",info:"Café sin azúcar."},
+{nombre:"Vainilla",oz:700,img:"imagenes/vainilla.jpg",info:"Café sabor vainilla."},
+{nombre:"Moka Blanco",oz:700,img:"imagenes/mokablanco.jpg",info:"Café moka blanco."}
+
 ]
 },
 
 {
 categoria:"Máquina Gourmet",
 items:[
-{nombre:"Base Leche", oz:1250, limite:1250, img:"imagenes/leche.jpg", info:"Base de leche para bebidas gourmet."},
-{nombre:"Base Vainilla", oz:1250, limite:1250, img:"imagenes/vainilla.jpg", info:"Base sabor vainilla."},
-{nombre:"Hershey", oz:647, img:"imagenes/hershey.jpg", info:"Chocolate Hershey para bebidas."}
+
+{nombre:"Base Leche",oz:1250,limite:1250,img:"imagenes/leche.jpg",info:"Base leche máquina gourmet."},
+{nombre:"Base Vainilla",oz:1250,limite:1250,img:"imagenes/basevainilla.jpg",info:"Base vainilla máquina gourmet."},
+{nombre:"Hershey",oz:647,img:"imagenes/hershey.jpg",info:"Chocolate Hershey."}
+
+]
+},
+
+{
+categoria:"Café Grano Andatti",
+items:[
+
+{nombre:"Café Grano Gourmet",oz:1000,img:"imagenes/granogourmet.jpg",info:"Café grano gourmet."},
+{nombre:"Café Grano Andatti",oz:1000,img:"imagenes/granoandatti.jpg",info:"Café grano Andatti."}
+
 ]
 }
 
@@ -240,6 +242,7 @@ let div=document.createElement("div");
 div.className="categoria";
 
 div.innerHTML=`
+
 <h2>${cat.categoria}</h2>
 
 <div class="header">
@@ -248,6 +251,7 @@ div.innerHTML=`
 <div>Contenedor</div>
 <div>Total</div>
 </div>
+
 `;
 
 cat.items.forEach(p=>{
@@ -256,12 +260,15 @@ let row=document.createElement("div");
 row.className="producto";
 
 row.dataset.oz=p.oz;
+row.dataset.limite=p.limite||"";
 
 row.innerHTML=`
 
 <div class="nombre" onclick="mostrarProducto('${p.nombre}','${p.img}','${p.info}',${p.oz})">
+
 ${p.nombre}
 <div class="oz">${p.oz} oz por bolsa</div>
+
 </div>
 
 <input type="number" class="bolsas" value="0" min="0">
@@ -269,6 +276,7 @@ ${p.nombre}
 <input type="number" class="contenedor" value="0" min="0">
 
 <div class="total"></div>
+
 `;
 
 div.appendChild(row);
@@ -280,7 +288,9 @@ app.appendChild(div);
 });
 
 document.querySelectorAll("input").forEach(i=>{
+
 i.addEventListener("input",calcular);
+
 });
 
 function calcular(){
@@ -288,12 +298,32 @@ function calcular(){
 document.querySelectorAll(".producto").forEach(row=>{
 
 let oz=parseFloat(row.dataset.oz);
-let bolsas=row.querySelector(".bolsas").value||0;
-let contenedor=row.querySelector(".contenedor").value||0;
 
-let total=(oz*bolsas)+parseFloat(contenedor);
+let bolsas=parseFloat(row.querySelector(".bolsas").value)||0;
 
-row.querySelector(".total").innerText=total+" oz";
+let contenedorInput=row.querySelector(".contenedor");
+
+let contenedor=parseFloat(contenedorInput.value)||0;
+
+let limite=parseFloat(row.dataset.limite);
+
+if(limite && contenedor>limite){
+
+contenedorInput.classList.add("warning");
+
+}else{
+
+contenedorInput.classList.remove("warning");
+
+}
+
+let ozBolsas=oz*bolsas;
+
+let total=ozBolsas+contenedor;
+
+row.querySelector(".total").innerHTML=
+`${total} oz
+<div class="detalle">${ozBolsas} + ${contenedor}</div>`;
 
 });
 
