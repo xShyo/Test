@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="es">
 <head>
 
@@ -11,45 +10,65 @@
 <style>
 
 body{
-font-family:Arial, sans-serif;
+font-family:Segoe UI,Arial;
 background:#eef2f7;
 margin:0;
-padding:15px;
+padding:20px;
 color:#333;
 }
 
 h1{
 text-align:center;
-margin-bottom:25px;
-font-size:24px;
+margin-bottom:30px;
+font-size:28px;
 }
 
 .container{
-max-width:900px;
+max-width:950px;
 margin:auto;
 }
 
+/* CATEGORIAS */
+
 .categoria{
 background:white;
-border-radius:12px;
-margin-bottom:20px;
-padding:16px;
-box-shadow:0 3px 8px rgba(0,0,0,0.08);
-border-left:6px solid #6b8cff;
+border-radius:14px;
+margin-bottom:25px;
+padding:18px;
+box-shadow:0 4px 12px rgba(0,0,0,0.08);
 }
 
 .categoria h2{
-margin:0 0 12px 0;
-font-size:18px;
+margin:0 0 14px 0;
+font-size:20px;
+display:flex;
+align-items:center;
+gap:10px;
 }
+
+/* COLORES */
+
+.maquina{
+border-left:6px solid #ff9800;
+}
+
+.grano{
+border-left:6px solid #6b4f2c;
+}
+
+.bases{
+border-left:6px solid #3f51b5;
+}
+
+/* HEADER */
 
 .header{
 display:grid;
-grid-template-columns:2fr 110px 110px 120px;
+grid-template-columns:2fr 120px 120px 140px;
 font-weight:bold;
 margin-bottom:8px;
 font-size:13px;
-color:#667;
+color:#666;
 text-align:center;
 }
 
@@ -57,12 +76,14 @@ text-align:center;
 text-align:left;
 }
 
+/* PRODUCTO */
+
 .producto{
 display:grid;
-grid-template-columns:2fr 110px 110px 120px;
+grid-template-columns:2fr 120px 120px 140px;
 gap:8px;
 align-items:center;
-padding:8px 0;
+padding:10px 0;
 border-bottom:1px solid #f0f0f0;
 }
 
@@ -71,24 +92,29 @@ border-bottom:none;
 }
 
 .nombre{
-font-weight:bold;
+font-weight:600;
 cursor:pointer;
 }
 
 .oz{
 font-size:11px;
-color:#777;
+color:#888;
 }
+
+/* INPUT */
 
 input{
 width:100%;
-padding:7px;
-font-size:16px;
+padding:8px;
+font-size:15px;
 text-align:center;
 border:1px solid #ddd;
 border-radius:6px;
 background:#fafafa;
+box-sizing:border-box;
 }
+
+/* TOTAL */
 
 .total{
 font-weight:bold;
@@ -98,14 +124,17 @@ color:#1a237e;
 
 .detalle{
 font-size:11px;
-color:#666;
-text-align:center;
+color:#777;
 }
+
+/* ALERTA */
 
 .warning{
 background:#ffebee;
 border-color:#e53935;
 }
+
+/* BOTONES */
 
 .controls{
 text-align:center;
@@ -113,13 +142,31 @@ margin-top:25px;
 }
 
 button{
-padding:12px 25px;
+padding:12px 20px;
 font-size:15px;
 border:none;
 border-radius:8px;
 cursor:pointer;
 background:#e53935;
 color:white;
+margin:6px;
+}
+
+.export{
+background:#2e7d32;
+}
+
+/* OVERLAY */
+
+.overlay{
+position:fixed;
+left:0;
+top:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.35);
+display:none;
+z-index:999;
 }
 
 /* TARJETA PRODUCTO */
@@ -129,33 +176,65 @@ position:fixed;
 left:50%;
 top:50%;
 transform:translate(-50%,-50%);
-width:260px;
+width:300px;
 background:white;
-border-radius:12px;
-box-shadow:0 10px 40px rgba(0,0,0,0.25);
-padding:15px;
+border-radius:16px;
+box-shadow:0 15px 50px rgba(0,0,0,0.35);
+padding:18px;
 display:none;
 z-index:1000;
+text-align:center;
+animation:pop .2s ease;
+}
+
+@keyframes pop{
+from{transform:translate(-50%,-60%) scale(.9);opacity:0}
+to{transform:translate(-50%,-50%) scale(1);opacity:1}
 }
 
 .product-card img{
 width:100%;
-border-radius:8px;
+border-radius:10px;
 margin-bottom:10px;
 }
 
-.overlay{
-position:fixed;
-left:0;
-top:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.3);
-display:none;
-z-index:999;
+.product-card h3{
+margin:6px 0;
+font-size:20px;
 }
 
-@media (max-width:600px){
+.product-type{
+font-size:13px;
+padding:4px 8px;
+border-radius:6px;
+display:inline-block;
+margin-bottom:8px;
+color:white;
+}
+
+.tipo-maquina{background:#ff9800;}
+.tipo-base{background:#3f51b5;}
+.tipo-grano{background:#6b4f2c;}
+
+.card-info{
+font-size:14px;
+color:#555;
+margin-top:8px;
+}
+
+.card-close{
+margin-top:12px;
+padding:8px 14px;
+background:#e53935;
+border:none;
+border-radius:6px;
+color:white;
+cursor:pointer;
+}
+
+/* RESPONSIVE */
+
+@media (max-width:650px){
 
 .header{
 display:none;
@@ -168,67 +247,74 @@ grid-template-columns:1fr;
 }
 
 </style>
-
 </head>
 
 <body>
 
-<h1>☕ Control Café OXXO</h1>
+<h1>☕ Control de Inventario Café</h1>
 
 <div class="container" id="app"></div>
 
 <div class="controls">
 <button onclick="limpiarTodo()">Limpiar Inventario</button>
+<button class="export" onclick="exportarInventario()">Exportar CSV</button>
 </div>
 
 <div class="overlay" id="overlay"></div>
 
 <div class="product-card" id="productCard">
+
 <img id="cardImg">
+
 <h3 id="cardTitle"></h3>
-<p id="cardInfo"></p>
+
+<div id="cardType" class="product-type"></div>
+
+<div class="card-info" id="cardInfo"></div>
+
+<button class="card-close" onclick="cerrarProducto()">Cerrar</button>
+
 </div>
 
 <script>
 
+const STORAGE_KEY="inventarioCafe";
+
 const productos=[
 
 {
-categoria:"Sabores de Café",
+categoria:"☕ Sabores de Máquina",
+tipo:"maquina",
 items:[
-
-{nombre:"Regular",oz:700,img:"imagenes/regular.png",info:"Sabor clásico de café."},
+{nombre:"Regular",oz:700,img:"imagenes/regular.png",info:"Café clásico."},
 {nombre:"Canela",oz:700,img:"imagenes/canela.jpg",info:"Café sabor canela."},
-{nombre:"Crema Irlandesa",oz:700,img:"imagenes/irlandesa.jpg",info:"Café sabor crema irlandesa."},
-{nombre:"Moka",oz:700,img:"imagenes/moka.jpg",info:"Café sabor chocolate moka."},
-{nombre:"Chocolate",oz:700,img:"imagenes/chocolate.jpg",info:"Bebida sabor chocolate."},
+{nombre:"Crema Irlandesa",oz:700,img:"imagenes/irlandesa.jpg",info:"Café crema irlandesa."},
+{nombre:"Moka",oz:700,img:"imagenes/moka.jpg",info:"Café sabor moka."},
+{nombre:"Chocolate",oz:700,img:"imagenes/chocolate.jpg",info:"Chocolate caliente."},
 {nombre:"Chocolate Abuelita",oz:647,img:"imagenes/abuelita.jpg",info:"Chocolate Abuelita."},
-{nombre:"Avellana",oz:700,img:"imagenes/avellana.jpg",info:"Café sabor avellana."},
+{nombre:"Avellana",oz:700,img:"imagenes/avellana.jpg",info:"Café avellana."},
 {nombre:"Sin Azúcar",oz:700,img:"imagenes/sinazucar.jpg",info:"Café sin azúcar."},
-{nombre:"Vainilla",oz:700,img:"imagenes/vainilla.jpg",info:"Café sabor vainilla."},
-{nombre:"Moka Blanco",oz:700,img:"imagenes/mokablanco.jpg",info:"Café moka blanco."}
-
+{nombre:"Vainilla",oz:700,img:"imagenes/vainilla.jpg",info:"Café vainilla."},
+{nombre:"Moka Blanco",oz:700,img:"imagenes/mokablanco.jpg",info:"Moka blanco."}
 ]
 },
 
 {
-categoria:"Máquina Gourmet",
+categoria:"🥛 Bases de Máquina",
+tipo:"bases",
 items:[
-
-{nombre:"Base Leche",oz:1250,limite:1250,img:"imagenes/leche.jpg",info:"Base leche máquina gourmet."},
-{nombre:"Base Vainilla",oz:1250,limite:1250,img:"imagenes/basevainilla.jpg",info:"Base vainilla máquina gourmet."},
+{nombre:"Base Leche",oz:1250,limite:1250,img:"imagenes/leche.jpg",info:"Base de leche."},
+{nombre:"Base Vainilla",oz:1250,limite:1250,img:"imagenes/basevainilla.jpg",info:"Base vainilla."},
 {nombre:"Hershey",oz:647,img:"imagenes/hershey.jpg",info:"Chocolate Hershey."}
-
 ]
 },
 
 {
-categoria:"Café Grano Andatti",
+categoria:"🫘 Café de Grano",
+tipo:"grano",
 items:[
-
-{nombre:"Café Grano Gourmet",oz:1000,img:"imagenes/granogourmet.jpg",info:"Café grano gourmet."},
-{nombre:"Café Grano Andatti",oz:1000,img:"imagenes/granoandatti.jpg",info:"Café grano Andatti."}
-
+{nombre:"Café Grano Gourmet",oz:1000,img:"imagenes/granogourmet.jpg",info:"Café gourmet."},
+{nombre:"Café Grano Andatti",oz:1000,img:"imagenes/granoandatti.jpg",info:"Café Andatti."}
 ]
 }
 
@@ -239,7 +325,7 @@ const app=document.getElementById("app");
 productos.forEach(cat=>{
 
 let div=document.createElement("div");
-div.className="categoria";
+div.className=`categoria ${cat.tipo}`;
 
 div.innerHTML=`
 
@@ -264,7 +350,8 @@ row.dataset.limite=p.limite||"";
 
 row.innerHTML=`
 
-<div class="nombre" onclick="mostrarProducto('${p.nombre}','${p.img}','${p.info}',${p.oz})">
+<div class="nombre"
+onclick="mostrarProducto('${p.nombre}','${p.img}','${p.info}',${p.oz},'${cat.tipo}')">
 
 ${p.nombre}
 <div class="oz">${p.oz} oz por bolsa</div>
@@ -272,7 +359,6 @@ ${p.nombre}
 </div>
 
 <input type="number" class="bolsas" value="0" min="0">
-
 <input type="number" class="contenedor" value="0" min="0">
 
 <div class="total"></div>
@@ -288,9 +374,10 @@ app.appendChild(div);
 });
 
 document.querySelectorAll("input").forEach(i=>{
-
-i.addEventListener("input",calcular);
-
+i.addEventListener("input",()=>{
+calcular();
+guardarDatos();
+});
 });
 
 function calcular(){
@@ -300,25 +387,18 @@ document.querySelectorAll(".producto").forEach(row=>{
 let oz=parseFloat(row.dataset.oz);
 
 let bolsas=parseFloat(row.querySelector(".bolsas").value)||0;
-
 let contenedorInput=row.querySelector(".contenedor");
-
 let contenedor=parseFloat(contenedorInput.value)||0;
 
 let limite=parseFloat(row.dataset.limite);
 
 if(limite && contenedor>limite){
-
 contenedorInput.classList.add("warning");
-
 }else{
-
 contenedorInput.classList.remove("warning");
-
 }
 
 let ozBolsas=oz*bolsas;
-
 let total=ozBolsas+contenedor;
 
 row.querySelector(".total").innerHTML=
@@ -329,35 +409,121 @@ row.querySelector(".total").innerHTML=
 
 }
 
+function guardarDatos(){
+
+let data=[];
+
+document.querySelectorAll(".producto").forEach(row=>{
+
+data.push({
+bolsas:row.querySelector(".bolsas").value,
+contenedor:row.querySelector(".contenedor").value
+});
+
+});
+
+localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
+
+}
+
+function cargarDatos(){
+
+let data=JSON.parse(localStorage.getItem(STORAGE_KEY));
+if(!data) return;
+
+document.querySelectorAll(".producto").forEach((row,i)=>{
+
+if(!data[i]) return;
+
+row.querySelector(".bolsas").value=data[i].bolsas;
+row.querySelector(".contenedor").value=data[i].contenedor;
+
+});
+
+}
+
+function exportarInventario(){
+
+let rows=[["Producto","Bolsas","Contenedor","Total OZ"]];
+
+document.querySelectorAll(".producto").forEach(row=>{
+
+let nombre=row.querySelector(".nombre").childNodes[0].textContent.trim();
+let bolsas=row.querySelector(".bolsas").value;
+let contenedor=row.querySelector(".contenedor").value;
+
+let oz=parseFloat(row.dataset.oz);
+let total=(oz*bolsas)+parseFloat(contenedor||0);
+
+rows.push([nombre,bolsas,contenedor,total]);
+
+});
+
+let csv=rows.map(r=>r.join(",")).join("\n");
+
+let blob=new Blob([csv],{type:"text/csv"});
+let url=URL.createObjectURL(blob);
+
+let a=document.createElement("a");
+a.href=url;
+a.download="inventario_cafe.csv";
+a.click();
+
+}
+
 function limpiarTodo(){
 
-if(!confirm("¿Seguro que quieres borrar todo?")) return;
+if(!confirm("¿Borrar todo el inventario?")) return;
 
-document.querySelectorAll(".bolsas").forEach(i=>i.value=0);
-document.querySelectorAll(".contenedor").forEach(i=>i.value=0);
+document.querySelectorAll("input").forEach(i=>i.value=0);
+
+localStorage.removeItem(STORAGE_KEY);
 
 calcular();
 
 }
 
-function mostrarProducto(nombre,img,info,oz){
+function mostrarProducto(nombre,img,info,oz,tipo){
 
 document.getElementById("cardTitle").innerText=nombre;
 document.getElementById("cardImg").src=img;
-document.getElementById("cardInfo").innerText=info+" | Bolsa: "+oz+" oz";
+
+document.getElementById("cardInfo").innerHTML=
+`Contenido por bolsa: <b>${oz} oz</b><br>${info}`;
+
+let type=document.getElementById("cardType");
+type.className="product-type";
+
+if(tipo=="maquina"){
+type.classList.add("tipo-maquina");
+type.innerText="Sabores de Máquina";
+}
+
+if(tipo=="bases"){
+type.classList.add("tipo-base");
+type.innerText="Base de Máquina";
+}
+
+if(tipo=="grano"){
+type.classList.add("tipo-grano");
+type.innerText="Café de Grano";
+}
 
 document.getElementById("overlay").style.display="block";
 document.getElementById("productCard").style.display="block";
 
 }
 
-document.getElementById("overlay").onclick=function(){
+function cerrarProducto(){
 
-this.style.display="none";
+document.getElementById("overlay").style.display="none";
 document.getElementById("productCard").style.display="none";
 
 }
 
+document.getElementById("overlay").onclick=cerrarProducto;
+
+cargarDatos();
 calcular();
 
 </script>
