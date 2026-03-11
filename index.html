@@ -23,7 +23,7 @@ font-size:22px;
 }
 
 .container{
-max-width:1000px;
+max-width:900px;
 margin:auto;
 }
 
@@ -36,16 +36,34 @@ box-shadow:0 2px 6px rgba(0,0,0,0.1);
 }
 
 .categoria h2{
-margin:0 0 15px 0;
+margin:0 0 10px 0;
 font-size:18px;
 }
 
+/* HEADER */
+
+.header{
+display:grid;
+grid-template-columns: 2fr 110px 110px 120px;
+font-weight:bold;
+margin-bottom:8px;
+font-size:14px;
+color:#555;
+text-align:center;
+}
+
+.header div:first-child{
+text-align:left;
+}
+
+/* FILAS */
+
 .producto{
 display:grid;
-grid-template-columns:2fr 1fr 1fr 1fr 1fr;
+grid-template-columns: 2fr 110px 110px 120px;
 gap:8px;
 align-items:center;
-padding:8px 0;
+padding:6px 0;
 border-bottom:1px solid #eee;
 }
 
@@ -56,32 +74,27 @@ border-bottom:none;
 .nombre{
 font-weight:bold;
 font-size:14px;
+text-align:left;
+}
+
+.oz{
+font-size:11px;
+color:#777;
 }
 
 input{
 width:100%;
 padding:6px;
-font-size:15px;
+font-size:16px;
 text-align:center;
 border:1px solid #ccc;
 border-radius:6px;
 }
 
-.oz{
-border:none;
-background:transparent;
-color:#666;
-font-weight:bold;
-}
-
-.oz:focus{
-border:1px solid #ccc;
-background:white;
-}
-
 .total{
 font-weight:bold;
 font-size:14px;
+text-align:center;
 }
 
 .detalle{
@@ -112,46 +125,31 @@ button:hover{
 background:#c62828;
 }
 
-
-/* ----------- MOBILE ----------- */
+/* MOBILE */
 
 @media (max-width:600px){
 
+.header{
+display:none;
+}
+
 .producto{
 grid-template-columns:1fr;
-gap:6px;
-background:#fafafa;
-padding:12px;
-border-radius:8px;
-margin-bottom:8px;
+gap:5px;
+padding:10px 0;
 }
 
 .nombre{
 font-size:16px;
-margin-bottom:5px;
 }
 
-.campo{
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:10px;
-}
-
-.campo label{
-font-size:13px;
-color:#555;
-}
-
-.campo input{
-width:100px;
-font-size:16px;
-padding:6px;
+input{
+font-size:18px;
+padding:10px;
 }
 
 .total{
-margin-top:4px;
-font-size:15px;
+font-size:16px;
 }
 
 }
@@ -209,39 +207,42 @@ items:[
 
 ];
 
-const app = document.getElementById("app");
+const app=document.getElementById("app");
 
 productos.forEach(cat=>{
 
 let div=document.createElement("div");
 div.className="categoria";
 
-div.innerHTML=`<h2>${cat.categoria}</h2>`;
+div.innerHTML=`
+<h2>${cat.categoria}</h2>
+
+<div class="header">
+<div>Producto</div>
+<div>Bolsas</div>
+<div>Contenedor</div>
+<div>Total</div>
+</div>
+`;
 
 cat.items.forEach(p=>{
 
 let row=document.createElement("div");
 row.className="producto";
+
+row.dataset.oz=p.oz;
 row.dataset.limite=p.limite || "";
 
 row.innerHTML=`
 
-<div class="nombre">${p.nombre}</div>
-
-<div class="campo">
-<label>Oz bolsa</label>
-<input type="number" class="oz" value="${p.oz}" min="0">
+<div class="nombre">
+${p.nombre}
+<div class="oz">${p.oz} oz por bolsa</div>
 </div>
 
-<div class="campo">
-<label>Bolsas</label>
 <input type="number" class="bolsas" value="0" min="0">
-</div>
 
-<div class="campo">
-<label>Contenedor</label>
 <input type="number" class="contenedor" value="0" min="0">
-</div>
 
 <div class="total"></div>
 `;
@@ -256,7 +257,7 @@ app.appendChild(div);
 
 document.querySelectorAll("input").forEach(i=>{
 
-i.addEventListener("input", calcular);
+i.addEventListener("input",calcular);
 
 i.addEventListener("focus",function(){
 this.select();
@@ -276,21 +277,28 @@ function calcular(){
 
 document.querySelectorAll(".producto").forEach(row=>{
 
-let oz=parseFloat(row.querySelector(".oz").value)||0;
+let oz=parseFloat(row.dataset.oz);
+
 let bolsas=parseFloat(row.querySelector(".bolsas").value)||0;
 
 let contenedorInput=row.querySelector(".contenedor");
+
 let contenedor=parseFloat(contenedorInput.value)||0;
 
 let limite=parseFloat(row.dataset.limite);
 
 if(limite && contenedor>limite){
+
 contenedorInput.classList.add("warning");
+
 }else{
+
 contenedorInput.classList.remove("warning");
+
 }
 
 let ozBolsas=oz*bolsas;
+
 let total=ozBolsas+contenedor;
 
 row.querySelector(".total").innerHTML=
