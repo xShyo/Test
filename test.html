@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Control Café OXXO</title>
+
+<style>
+
+body{
+font-family:Arial, sans-serif;
+background:#f3f4f6;
+margin:0;
+padding:15px;
+}
+
+h1{
+text-align:center;
+margin-bottom:20px;
+font-size:22px;
+}
+
+.container{
+max-width:1000px;
+margin:auto;
+}
+
+.categoria{
+background:white;
+border-radius:10px;
+margin-bottom:20px;
+padding:15px;
+box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
+
+.categoria h2{
+margin:0 0 10px 0;
+font-size:18px;
+}
+
+.header{
+display:grid;
+grid-template-columns:2fr 1fr 1fr 1fr 1fr;
+font-weight:bold;
+margin-bottom:8px;
+font-size:14px;
+color:#555;
+}
+
+.producto{
+display:grid;
+grid-template-columns:2fr 1fr 1fr 1fr 1fr;
+gap:8px;
+align-items:center;
+padding:6px 0;
+border-bottom:1px solid #eee;
+}
+
+.producto:last-child{
+border-bottom:none;
+}
+
+.nombre{
+font-weight:bold;
+font-size:14px;
+}
+
+input{
+width:100%;
+padding:6px;
+font-size:16px;
+text-align:center;
+border:1px solid #ccc;
+border-radius:6px;
+}
+
+.oz{
+border:none;
+background:transparent;
+color:#666;
+font-weight:bold;
+}
+
+.oz:focus{
+border:1px solid #ccc;
+background:white;
+}
+
+.total{
+font-weight:bold;
+font-size:14px;
+}
+
+.detalle{
+font-size:11px;
+color:#666;
+}
+
+.warning{
+background:#ffebee;
+}
+
+.controls{
+text-align:center;
+margin-top:20px;
+}
+
+button{
+padding:12px 25px;
+font-size:16px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+background:#e53935;
+color:white;
+}
+
+button:hover{
+background:#c62828;
+}
+
+
+/* ---------- MOBILE MODE ---------- */
+
+@media (max-width:600px){
+
+.header{
+display:none;
+}
+
+.producto{
+grid-template-columns:1fr;
+gap:5px;
+padding:10px 0;
+}
+
+.nombre{
+font-size:16px;
+}
+
+input{
+font-size:18px;
+padding:10px;
+}
+
+.total{
+font-size:16px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>☕ Control Café OXXO</h1>
+
+<div class="container" id="app"></div>
+
+<div class="controls">
+<button onclick="limpiarTodo()">Limpiar Inventario</button>
+</div>
+
+<script>
+
+const productos = [
+
+{
+categoria:"Sabores de Café",
+items:[
+{nombre:"Regular", oz:700},
+{nombre:"Canela", oz:700},
+{nombre:"Crema Irlandesa", oz:700},
+{nombre:"Moka", oz:700},
+{nombre:"Chocolate", oz:700},
+{nombre:"Chocolate Abuelita", oz:647},
+{nombre:"Avellana", oz:700},
+{nombre:"Sin Azúcar", oz:700},
+{nombre:"Vainilla", oz:700},
+{nombre:"Moka Blanco", oz:700}
+]
+},
+
+{
+categoria:"Máquina Gourmet",
+items:[
+{nombre:"Base Leche", oz:1250, limite:1250},
+{nombre:"Base Vainilla", oz:1250, limite:1250},
+{nombre:"Hershey", oz:647}
+]
+},
+
+{
+categoria:"Café Grano Andatti",
+items:[
+{nombre:"Café Grano Gourmet", oz:1000},
+{nombre:"Café Grano Andatti", oz:1000}
+]
+}
+
+];
+
+const app = document.getElementById("app");
+
+productos.forEach(cat=>{
+
+let div=document.createElement("div");
+div.className="categoria";
+
+div.innerHTML=`
+<h2>${cat.categoria}</h2>
+
+<div class="header">
+<div>Producto</div>
+<div>Oz bolsa</div>
+<div>Bolsas</div>
+<div>Contenedor</div>
+<div>Total</div>
+</div>
+`;
+
+cat.items.forEach(p=>{
+
+let row=document.createElement("div");
+row.className="producto";
+
+row.dataset.limite=p.limite || "";
+
+row.innerHTML=`
+
+<div class="nombre">${p.nombre}</div>
+
+<input type="number" class="oz" value="${p.oz}" min="0">
+
+<input type="number" class="bolsas" value="0" min="0">
+
+<input type="number" class="contenedor" value="0" min="0">
+
+<div class="total"></div>
+`;
+
+div.appendChild(row);
+
+});
+
+app.appendChild(div);
+
+});
+
+document.querySelectorAll("input").forEach(i=>{
+
+i.addEventListener("input", calcular);
+
+i.addEventListener("focus",function(){
+this.select();
+});
+
+i.addEventListener("keydown",function(e){
+
+if(["e","E","+","-",".",","].includes(e.key)){
+e.preventDefault();
+}
+
+});
+
+});
+
+function calcular(){
+
+document.querySelectorAll(".producto").forEach(row=>{
+
+let oz=parseFloat(row.querySelector(".oz").value)||0;
+
+let bolsas=parseFloat(row.querySelector(".bolsas").value)||0;
+
+let contenedorInput=row.querySelector(".contenedor");
+
+let contenedor=parseFloat(contenedorInput.value)||0;
+
+let limite=parseFloat(row.dataset.limite);
+
+if(limite && contenedor>limite){
+
+contenedorInput.classList.add("warning");
+
+}else{
+
+contenedorInput.classList.remove("warning");
+
+}
+
+let ozBolsas=oz*bolsas;
+
+let total=ozBolsas+contenedor;
+
+row.querySelector(".total").innerHTML=
+`${total} oz
+<div class="detalle">${ozBolsas} + ${contenedor}</div>`;
+
+});
+
+}
+
+function limpiarTodo(){
+
+if(!confirm("¿Seguro que quieres borrar todo?")) return;
+
+document.querySelectorAll(".bolsas").forEach(i=>i.value=0);
+document.querySelectorAll(".contenedor").forEach(i=>i.value=0);
+
+calcular();
+
+}
+
+calcular();
+
+</script>
+
+</body>
+</html>
