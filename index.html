@@ -36,17 +36,8 @@ box-shadow:0 2px 6px rgba(0,0,0,0.1);
 }
 
 .categoria h2{
-margin:0 0 10px 0;
+margin:0 0 15px 0;
 font-size:18px;
-}
-
-.header{
-display:grid;
-grid-template-columns:2fr 1fr 1fr 1fr 1fr;
-font-weight:bold;
-margin-bottom:8px;
-font-size:14px;
-color:#555;
 }
 
 .producto{
@@ -54,7 +45,7 @@ display:grid;
 grid-template-columns:2fr 1fr 1fr 1fr 1fr;
 gap:8px;
 align-items:center;
-padding:6px 0;
+padding:8px 0;
 border-bottom:1px solid #eee;
 }
 
@@ -70,7 +61,7 @@ font-size:14px;
 input{
 width:100%;
 padding:6px;
-font-size:16px;
+font-size:15px;
 text-align:center;
 border:1px solid #ccc;
 border-radius:6px;
@@ -122,31 +113,45 @@ background:#c62828;
 }
 
 
-/* ---------- MOBILE MODE ---------- */
+/* ----------- MOBILE ----------- */
 
 @media (max-width:600px){
 
-.header{
-display:none;
-}
-
 .producto{
 grid-template-columns:1fr;
-gap:5px;
-padding:10px 0;
+gap:6px;
+background:#fafafa;
+padding:12px;
+border-radius:8px;
+margin-bottom:8px;
 }
 
 .nombre{
 font-size:16px;
+margin-bottom:5px;
 }
 
-input{
-font-size:18px;
-padding:10px;
+.campo{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+}
+
+.campo label{
+font-size:13px;
+color:#555;
+}
+
+.campo input{
+width:100px;
+font-size:16px;
+padding:6px;
 }
 
 .total{
-font-size:16px;
+margin-top:4px;
+font-size:15px;
 }
 
 }
@@ -211,34 +216,32 @@ productos.forEach(cat=>{
 let div=document.createElement("div");
 div.className="categoria";
 
-div.innerHTML=`
-<h2>${cat.categoria}</h2>
-
-<div class="header">
-<div>Producto</div>
-<div>Oz bolsa</div>
-<div>Bolsas</div>
-<div>Contenedor</div>
-<div>Total</div>
-</div>
-`;
+div.innerHTML=`<h2>${cat.categoria}</h2>`;
 
 cat.items.forEach(p=>{
 
 let row=document.createElement("div");
 row.className="producto";
-
 row.dataset.limite=p.limite || "";
 
 row.innerHTML=`
 
 <div class="nombre">${p.nombre}</div>
 
+<div class="campo">
+<label>Oz bolsa</label>
 <input type="number" class="oz" value="${p.oz}" min="0">
+</div>
 
+<div class="campo">
+<label>Bolsas</label>
 <input type="number" class="bolsas" value="0" min="0">
+</div>
 
+<div class="campo">
+<label>Contenedor</label>
 <input type="number" class="contenedor" value="0" min="0">
+</div>
 
 <div class="total"></div>
 `;
@@ -274,27 +277,20 @@ function calcular(){
 document.querySelectorAll(".producto").forEach(row=>{
 
 let oz=parseFloat(row.querySelector(".oz").value)||0;
-
 let bolsas=parseFloat(row.querySelector(".bolsas").value)||0;
 
 let contenedorInput=row.querySelector(".contenedor");
-
 let contenedor=parseFloat(contenedorInput.value)||0;
 
 let limite=parseFloat(row.dataset.limite);
 
 if(limite && contenedor>limite){
-
 contenedorInput.classList.add("warning");
-
 }else{
-
 contenedorInput.classList.remove("warning");
-
 }
 
 let ozBolsas=oz*bolsas;
-
 let total=ozBolsas+contenedor;
 
 row.querySelector(".total").innerHTML=
@@ -321,5 +317,4 @@ calcular();
 </script>
 
 </body>
-
 </html>
