@@ -15,6 +15,12 @@ background:#eef2f7;
 margin:0;
 padding:20px;
 color:#333;
+transition:0.3s;
+}
+
+body.dark{
+background:#121212;
+color:#eee;
 }
 
 h1{
@@ -28,6 +34,29 @@ max-width:950px;
 margin:auto;
 }
 
+/* BOTON DARK MODE */
+
+.dark-toggle{
+position:fixed;
+top:15px;
+right:15px;
+width:40px;
+height:40px;
+border-radius:50%;
+border:none;
+cursor:pointer;
+font-size:18px;
+background:#222;
+color:white;
+box-shadow:0 4px 10px rgba(0,0,0,0.3);
+z-index:2000;
+}
+
+body.dark .dark-toggle{
+background:#f5f5f5;
+color:#111;
+}
+
 /* CATEGORIAS */
 
 .categoria{
@@ -36,29 +65,19 @@ border-radius:14px;
 margin-bottom:25px;
 padding:18px;
 box-shadow:0 4px 12px rgba(0,0,0,0.08);
+transition:0.3s;
 }
 
-.categoria h2{
-margin:0 0 14px 0;
-font-size:20px;
-display:flex;
-align-items:center;
-gap:10px;
+body.dark .categoria{
+background:#1e1e1e;
+box-shadow:none;
 }
 
 /* COLORES */
 
-.maquina{
-border-left:6px solid #ff9800;
-}
-
-.grano{
-border-left:6px solid #6b4f2c;
-}
-
-.bases{
-border-left:6px solid #3f51b5;
-}
+.maquina{ border-left:6px solid #ff9800; }
+.grano{ border-left:6px solid #6b4f2c; }
+.bases{ border-left:6px solid #3f51b5; }
 
 /* HEADER */
 
@@ -70,6 +89,10 @@ margin-bottom:8px;
 font-size:13px;
 color:#666;
 text-align:center;
+}
+
+body.dark .header{
+color:#bbb;
 }
 
 .header div:first-child{
@@ -85,6 +108,10 @@ gap:8px;
 align-items:center;
 padding:10px 0;
 border-bottom:1px solid #f0f0f0;
+}
+
+body.dark .producto{
+border-bottom:1px solid #333;
 }
 
 .producto:last-child{
@@ -114,12 +141,22 @@ background:#fafafa;
 box-sizing:border-box;
 }
 
+body.dark input{
+background:#2a2a2a;
+border:1px solid #444;
+color:white;
+}
+
 /* TOTAL */
 
 .total{
 font-weight:bold;
 text-align:center;
 color:#1a237e;
+}
+
+body.dark .total{
+color:#90caf9;
 }
 
 .detalle{
@@ -187,6 +224,10 @@ text-align:center;
 animation:pop .2s ease;
 }
 
+body.dark .product-card{
+background:#1e1e1e;
+}
+
 @keyframes pop{
 from{transform:translate(-50%,-60%) scale(.9);opacity:0}
 to{transform:translate(-50%,-50%) scale(1);opacity:1}
@@ -235,21 +276,16 @@ cursor:pointer;
 /* RESPONSIVE */
 
 @media (max-width:650px){
-
-.header{
-display:none;
-}
-
-.producto{
-grid-template-columns:1fr;
-}
-
+.header{display:none;}
+.producto{grid-template-columns:1fr;}
 }
 
 </style>
 </head>
 
 <body>
+
+<button class="dark-toggle" onclick="toggleDark()">🌙</button>
 
 <h1>☕ Control de Inventario Café</h1>
 
@@ -263,25 +299,32 @@ grid-template-columns:1fr;
 <div class="overlay" id="overlay"></div>
 
 <div class="product-card" id="productCard">
-
 <img id="cardImg">
-
 <h3 id="cardTitle"></h3>
-
 <div id="cardType" class="product-type"></div>
-
 <div class="card-info" id="cardInfo"></div>
-
 <button class="card-close" onclick="cerrarProducto()">Cerrar</button>
-
 </div>
 
 <script>
 
 const STORAGE_KEY="inventarioCafe";
+const DARK_KEY="modoOscuro";
+
+/* DARK MODE */
+
+function toggleDark(){
+document.body.classList.toggle("dark");
+localStorage.setItem(DARK_KEY,document.body.classList.contains("dark"));
+}
+
+if(localStorage.getItem(DARK_KEY)==="true"){
+document.body.classList.add("dark");
+}
+
+/* PRODUCTOS */
 
 const productos=[
-
 {
 categoria:"☕ Sabores de Máquina",
 tipo:"maquina",
@@ -298,7 +341,6 @@ items:[
 {nombre:"Moka Blanco",oz:700,img:"imagenes/mokablanco.jpg",info:"Moka blanco."}
 ]
 },
-
 {
 categoria:"🥛 Bases de Máquina",
 tipo:"bases",
@@ -308,7 +350,6 @@ items:[
 {nombre:"Hershey",oz:647,img:"imagenes/hershey.jpg",info:"Chocolate Hershey."}
 ]
 },
-
 {
 categoria:"🫘 Café de Grano",
 tipo:"grano",
@@ -317,7 +358,6 @@ items:[
 {nombre:"Café Grano Andatti",oz:1000,img:"imagenes/granoandatti.jpg",info:"Café Andatti."}
 ]
 }
-
 ];
 
 const app=document.getElementById("app");
@@ -328,41 +368,31 @@ let div=document.createElement("div");
 div.className=`categoria ${cat.tipo}`;
 
 div.innerHTML=`
-
 <h2>${cat.categoria}</h2>
-
 <div class="header">
 <div>Producto</div>
 <div>Bolsas</div>
 <div>Contenedor</div>
 <div>Total</div>
 </div>
-
 `;
 
 cat.items.forEach(p=>{
 
 let row=document.createElement("div");
 row.className="producto";
-
 row.dataset.oz=p.oz;
 row.dataset.limite=p.limite||"";
 
 row.innerHTML=`
-
-<div class="nombre"
-onclick="mostrarProducto('${p.nombre}','${p.img}','${p.info}',${p.oz},'${cat.tipo}')">
-
+<div class="nombre" onclick="mostrarProducto('${p.nombre}','${p.img}','${p.info}',${p.oz},'${cat.tipo}')">
 ${p.nombre}
 <div class="oz">${p.oz} oz por bolsa</div>
-
 </div>
 
 <input type="number" class="bolsas" value="0" min="0">
 <input type="number" class="contenedor" value="0" min="0">
-
 <div class="total"></div>
-
 `;
 
 div.appendChild(row);
@@ -385,11 +415,9 @@ function calcular(){
 document.querySelectorAll(".producto").forEach(row=>{
 
 let oz=parseFloat(row.dataset.oz);
-
 let bolsas=parseFloat(row.querySelector(".bolsas").value)||0;
 let contenedorInput=row.querySelector(".contenedor");
 let contenedor=parseFloat(contenedorInput.value)||0;
-
 let limite=parseFloat(row.dataset.limite);
 
 if(limite && contenedor>limite){
@@ -402,8 +430,7 @@ let ozBolsas=oz*bolsas;
 let total=ozBolsas+contenedor;
 
 row.querySelector(".total").innerHTML=
-`${total} oz
-<div class="detalle">${ozBolsas} + ${contenedor}</div>`;
+`${total} oz <div class="detalle">${ozBolsas} + ${contenedor}</div>`;
 
 });
 
@@ -451,8 +478,8 @@ document.querySelectorAll(".producto").forEach(row=>{
 let nombre=row.querySelector(".nombre").childNodes[0].textContent.trim();
 let bolsas=row.querySelector(".bolsas").value;
 let contenedor=row.querySelector(".contenedor").value;
-
 let oz=parseFloat(row.dataset.oz);
+
 let total=(oz*bolsas)+parseFloat(contenedor||0);
 
 rows.push([nombre,bolsas,contenedor,total]);
@@ -476,9 +503,7 @@ function limpiarTodo(){
 if(!confirm("¿Borrar todo el inventario?")) return;
 
 document.querySelectorAll("input").forEach(i=>i.value=0);
-
 localStorage.removeItem(STORAGE_KEY);
-
 calcular();
 
 }
