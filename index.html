@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="es">
 <head>
 
@@ -8,6 +9,7 @@
 <title>Control Café</title>
 
 <style>
+
 body{
 font-family:Arial, sans-serif;
 background:#eef2f7;
@@ -20,17 +22,14 @@ h1{
 text-align:center;
 margin-bottom:25px;
 font-size:24px;
-color:#222;
 }
-
-/* CONTENEDOR */
 
 .container{
 max-width:900px;
 margin:auto;
 }
 
-/* CATEGORIAS */
+/* CATEGORIA */
 
 .categoria{
 background:white;
@@ -44,7 +43,6 @@ border-left:6px solid #6b8cff;
 .categoria h2{
 margin:0 0 12px 0;
 font-size:18px;
-color:#334;
 }
 
 /* HEADER */
@@ -63,7 +61,7 @@ text-align:center;
 text-align:left;
 }
 
-/* PRODUCTOS */
+/* FILAS */
 
 .producto{
 display:grid;
@@ -82,8 +80,8 @@ border-bottom:none;
 
 .nombre{
 font-weight:bold;
-font-size:14px;
-color:#222;
+cursor:pointer;
+position:relative;
 }
 
 .oz{
@@ -91,7 +89,7 @@ font-size:11px;
 color:#777;
 }
 
-/* INPUTS */
+/* INPUT */
 
 input{
 width:100%;
@@ -101,34 +99,58 @@ text-align:center;
 border:1px solid #ddd;
 border-radius:6px;
 background:#fafafa;
-transition:0.2s;
 }
-
-input:focus{
-outline:none;
-border-color:#6b8cff;
-background:white;
-}
-
-/* TOTAL */
 
 .total{
 font-weight:bold;
-font-size:15px;
 text-align:center;
 color:#1a237e;
 }
 
-.detalle{
-font-size:11px;
-color:#666;
+/* TARJETA PRODUCTO */
+
+.product-card{
+
+position:fixed;
+left:50%;
+top:50%;
+transform:translate(-50%,-50%);
+width:260px;
+background:white;
+border-radius:12px;
+box-shadow:0 10px 40px rgba(0,0,0,0.25);
+padding:15px;
+display:none;
+z-index:1000;
+
 }
 
-/* WARNING */
+.product-card img{
+width:100%;
+border-radius:8px;
+margin-bottom:10px;
+}
 
-.warning{
-background:#ffebee;
-border-color:#e53935;
+.product-card h3{
+margin:5px 0;
+}
+
+.product-card p{
+font-size:13px;
+color:#555;
+}
+
+.overlay{
+
+position:fixed;
+left:0;
+top:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.3);
+display:none;
+z-index:999;
+
 }
 
 /* BOTON */
@@ -146,11 +168,6 @@ border-radius:8px;
 cursor:pointer;
 background:#e53935;
 color:white;
-transition:0.2s;
-}
-
-button:hover{
-background:#c62828;
 }
 
 /* MOBILE */
@@ -163,21 +180,6 @@ display:none;
 
 .producto{
 grid-template-columns:1fr;
-gap:6px;
-padding:10px 0;
-}
-
-.nombre{
-font-size:16px;
-}
-
-input{
-font-size:18px;
-padding:10px;
-}
-
-.total{
-font-size:17px;
 }
 
 }
@@ -196,6 +198,14 @@ font-size:17px;
 <button onclick="limpiarTodo()">Limpiar Inventario</button>
 </div>
 
+<div class="overlay" id="overlay"></div>
+
+<div class="product-card" id="productCard">
+<img id="cardImg">
+<h3 id="cardTitle"></h3>
+<p id="cardInfo"></p>
+</div>
+
 <script>
 
 const productos = [
@@ -203,33 +213,20 @@ const productos = [
 {
 categoria:"Sabores de Café",
 items:[
-{nombre:"Regular", oz:700},
-{nombre:"Canela", oz:700},
-{nombre:"Crema Irlandesa", oz:700},
-{nombre:"Moka", oz:700},
-{nombre:"Chocolate", oz:700},
-{nombre:"Chocolate Abuelita", oz:647},
-{nombre:"Avellana", oz:700},
-{nombre:"Sin Azúcar", oz:700},
-{nombre:"Vainilla", oz:700},
-{nombre:"Moka Blanco", oz:700}
+{nombre:"Regular", oz:700, img:"imagenes/regular.jpg", info:"Sabor clásico de café Andatti."},
+{nombre:"Canela", oz:700, img:"imagenes/canela.jpg", info:"Café con sabor a canela."},
+{nombre:"Crema Irlandesa", oz:700, img:"imagenes/irlandesa.jpg", info:"Café sabor crema irlandesa."},
+{nombre:"Moka", oz:700, img:"imagenes/moka.jpg", info:"Café con sabor chocolate moka."},
+{nombre:"Chocolate", oz:700, img:"imagenes/chocolate.jpg", info:"Bebida sabor chocolate."}
 ]
 },
 
 {
 categoria:"Máquina Gourmet",
 items:[
-{nombre:"Base Leche", oz:1250, limite:1250},
-{nombre:"Base Vainilla", oz:1250, limite:1250},
-{nombre:"Hershey", oz:647}
-]
-},
-
-{
-categoria:"Café Grano Andatti",
-items:[
-{nombre:"Café Grano Gourmet", oz:1000},
-{nombre:"Café Grano Andatti", oz:1000}
+{nombre:"Base Leche", oz:1250, limite:1250, img:"imagenes/leche.jpg", info:"Base de leche para bebidas gourmet."},
+{nombre:"Base Vainilla", oz:1250, limite:1250, img:"imagenes/vainilla.jpg", info:"Base sabor vainilla."},
+{nombre:"Hershey", oz:647, img:"imagenes/hershey.jpg", info:"Chocolate Hershey para bebidas."}
 ]
 }
 
@@ -259,11 +256,10 @@ let row=document.createElement("div");
 row.className="producto";
 
 row.dataset.oz=p.oz;
-row.dataset.limite=p.limite || "";
 
 row.innerHTML=`
 
-<div class="nombre">
+<div class="nombre" onclick="mostrarProducto('${p.nombre}','${p.img}','${p.info}',${p.oz})">
 ${p.nombre}
 <div class="oz">${p.oz} oz por bolsa</div>
 </div>
@@ -284,21 +280,7 @@ app.appendChild(div);
 });
 
 document.querySelectorAll("input").forEach(i=>{
-
 i.addEventListener("input",calcular);
-
-i.addEventListener("focus",function(){
-this.select();
-});
-
-i.addEventListener("keydown",function(e){
-
-if(["e","E","+","-",".",","].includes(e.key)){
-e.preventDefault();
-}
-
-});
-
 });
 
 function calcular(){
@@ -306,32 +288,12 @@ function calcular(){
 document.querySelectorAll(".producto").forEach(row=>{
 
 let oz=parseFloat(row.dataset.oz);
+let bolsas=row.querySelector(".bolsas").value||0;
+let contenedor=row.querySelector(".contenedor").value||0;
 
-let bolsas=parseFloat(row.querySelector(".bolsas").value)||0;
+let total=(oz*bolsas)+parseFloat(contenedor);
 
-let contenedorInput=row.querySelector(".contenedor");
-
-let contenedor=parseFloat(contenedorInput.value)||0;
-
-let limite=parseFloat(row.dataset.limite);
-
-if(limite && contenedor>limite){
-
-contenedorInput.classList.add("warning");
-
-}else{
-
-contenedorInput.classList.remove("warning");
-
-}
-
-let ozBolsas=oz*bolsas;
-
-let total=ozBolsas+contenedor;
-
-row.querySelector(".total").innerHTML=
-`${total} oz
-<div class="detalle">${ozBolsas} + ${contenedor}</div>`;
+row.querySelector(".total").innerText=total+" oz";
 
 });
 
@@ -345,6 +307,24 @@ document.querySelectorAll(".bolsas").forEach(i=>i.value=0);
 document.querySelectorAll(".contenedor").forEach(i=>i.value=0);
 
 calcular();
+
+}
+
+function mostrarProducto(nombre,img,info,oz){
+
+document.getElementById("cardTitle").innerText=nombre;
+document.getElementById("cardImg").src=img;
+document.getElementById("cardInfo").innerText=info+" | Bolsa: "+oz+" oz";
+
+document.getElementById("overlay").style.display="block";
+document.getElementById("productCard").style.display="block";
+
+}
+
+document.getElementById("overlay").onclick=function(){
+
+this.style.display="none";
+document.getElementById("productCard").style.display="none";
 
 }
 
